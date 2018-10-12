@@ -1,7 +1,0 @@
-#mainNav {
-	background-color: rgb(45, 62, 79); 
-}
-
-#mainNav .navbar-nav li.nav-item a.nav-link:hover {
-  color: #18BC9C;
-}
