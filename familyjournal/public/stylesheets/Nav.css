@@ -50,3 +50,9 @@
         border-top:0 none;
     }
 }
+
+.btn-theme {
+	color: #FFF;
+	background-color: #18BC9C; 
+	border-color: rgb(29,142,118);
+}
