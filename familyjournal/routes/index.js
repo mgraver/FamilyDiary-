@@ -7,8 +7,10 @@ router.get('/', function(req, res, next) {
 });
 
 /* GET registration form */
-router.get('/createAccount', (req, res, next) => {
+router.get('/register', (req, res, next) => {
 	res.render('register.ejs', {})
 });
+
+router.use('/createAccount', require('./createAccount'));
 
 module.exports = router;

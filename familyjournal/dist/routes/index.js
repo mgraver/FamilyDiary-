@@ -9,8 +9,10 @@ router.get('/', function (req, res, next) {
 });
 
 /* GET registration form */
-router.get('/createAccount', function (req, res, next) {
+router.get('/register', function (req, res, next) {
   res.render('register.ejs', {});
 });
+
+router.use('/createAccount', require('./createAccount'));
 
 module.exports = router;
