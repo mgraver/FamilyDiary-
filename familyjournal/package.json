@@ -8,6 +8,7 @@
     "start": "npm run build && supervisor dist/bin/www"
   },
   "dependencies": {
+    "bcrypt": "^3.0.2",
     "body-parser": "~1.18.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
@@ -15,6 +16,7 @@
     "express": "^4.16.3",
     "morgan": "~1.9.0",
     "nodeman": "^1.1.2",
+    "pg": "^7.5.0",
     "serve-favicon": "~2.4.5"
   },
   "devDependencies": {
