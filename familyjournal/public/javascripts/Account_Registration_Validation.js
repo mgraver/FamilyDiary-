@@ -1,8 +1,8 @@
 function validatePassword() {
 	let valid = true;
 
-	let password1 = document.getElementById("password_1").value;
-	let password2 = document.getElementById("password_2").value;
+	let password1 = document.getElementById("password_1").value.trim();
+	let password2 = document.getElementById("password_2").value.trim();
 
 	valid = valid && (password1 == password2);
 

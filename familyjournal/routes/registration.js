@@ -9,10 +9,10 @@ router.get('/', (req, res, next) => {
 /*POST form data for account creation*/
 router.post('/createAccount', (req, res, next) => {
 	console.log(req.body);
-	var first_name = req.body.first_name;
-	var last_name = req.body.last_name;
-	var email = req.body.email;
-	var password = req.body.password;
+	var first_name = req.body.first_name.trim();
+	var last_name = req.body.last_name.trim();
+	var email = req.body.email.trim();
+	var password = req.body.password.trim();
 });
 
 module.exports = router;
