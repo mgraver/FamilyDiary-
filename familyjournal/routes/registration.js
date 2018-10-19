@@ -1,6 +1,16 @@
 var express = require('express');
 var router = express.Router();
 
+const config = require('../serverConfig');
+const {Pool} = require('pg');
+
+const pool = new Pool(config);
+
+pool.query('SELECT * FROM users', (err, res) => {
+  console.log(err, res)
+  pool.end()
+})
+
 /* GET registration form */
 router.get('/', (req, res, next) => {
 	res.render('register.ejs', {})
