@@ -3,16 +3,13 @@
 var express = require('express');
 var router = express.Router();
 
+var registration = require("./registration");
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
   res.render('home', { Navbar: 'Login_Navbar', LoginName: '' });
 });
 
-/* GET registration form */
-router.get('/register', function (req, res, next) {
-  res.render('register.ejs', {});
-});
-
-router.use('/createAccount', require('./createAccount'));
+router.use('/register', registration);
 
 module.exports = router;
