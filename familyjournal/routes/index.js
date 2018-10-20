@@ -15,6 +15,12 @@ router.get('/', function(req, res, next) {
   	}
 });
 
+router.get('/logout', (req, res, next) => {
+	//Removes ression and rebuilds it on next request.
+	req.session.destroy();
+	res.redirect("../"); //Go back to home.
+})
+
 router.use('/register', registration);
 
 module.exports = router;
