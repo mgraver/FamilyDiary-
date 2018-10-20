@@ -42,7 +42,7 @@ router.post("/createAccount", (req, res, next) => {
 					console.log(err.stack);
 				} else {
 					console.log(qRes.rows[0]);
-					req.session.userID = id;
+					req.session.userID = qRes.rows[0].id;
 					res.redirect("/");
 				}
 			});
