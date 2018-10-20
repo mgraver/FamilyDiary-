@@ -40,10 +40,11 @@ router.post("/createAccount", (req, res, next) => {
 				console.log("Pool query.");
 				if (err) {
 					console.log(err.stack);
+					res.status(500).send();
 				} else {
 					console.log(qRes.rows[0]);
 					req.session.userID = qRes.rows[0].id;
-					res.redirect("/");
+					res.redirect("../../");
 				}
 			});
 		});
