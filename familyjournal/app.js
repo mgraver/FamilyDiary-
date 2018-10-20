@@ -20,7 +20,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(session({secret: "smallKeys", resave: false, saveUninitialized: true}));
+app.use(session({secret: "smallKeys", resave: false, saveUninitialized: true})); //Did you fill this!!!!
 app.use(express.static(path.join(__dirname, 'public'))); //All paths start in the public folder for HTML includes.
 
 app.use('/', index);
