@@ -44,7 +44,7 @@ router.post("/createAccount", (req, res, next) => {
 				} else {
 					console.log(qRes.rows[0]);
 					req.session.userID = qRes.rows[0].id;
-					res.redirect("../../");
+					res.redirect("../../"); //Go back to home.
 				}
 			});
 		});
