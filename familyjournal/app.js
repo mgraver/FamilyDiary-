@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('express-session');
 
 var index = require('./routes/index');
 
@@ -19,6 +20,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(session({secret: "smallKeys", resave: false, saveUninitialized: true}));
 app.use(express.static(path.join(__dirname, 'public'))); //All paths start in the public folder for HTML includes.
 
 app.use('/', index);
