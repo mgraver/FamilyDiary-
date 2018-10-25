@@ -1,0 +1,32 @@
+.my-form
+{
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+.my-form .row
+{
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.cardHeader-color {
+	background-color: rgb(45, 62, 79); 
+	color: #18BC9C;
+	font-size: 18px;
+    font-weight: bold;
+}
+
+.btn-theme {
+	color: #FFF;
+	background-color: #18BC9C; 
+	border-color: rgb(29,142,118);
+}
+
+.btn-add {
+    background-color: rgb(45, 62, 79); 
+    color: #18BC9C;
+    font-weight: 900;
+    border-radius:45%;
+    float: right;
+}

@@ -10,18 +10,6 @@
     margin-right: 0;
 }
 
-.login-form
-{
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
-}
-
-.login-form .row
-{
-    margin-left: 0;
-    margin-right: 0;
-}
-
 .cardHeader-color {
 	background-color: rgb(45, 62, 79); 
 	color: #18BC9C;
