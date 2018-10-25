@@ -7,10 +7,10 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Family Jornal-Registration</title>
-    <script type="text/javascript" src="/javascripts/Account_Registration_Validation.js"></script>
+    <title>Family Jornal Entry</title>
     <link rel='stylesheet' href='/stylesheets/Nav.css' />
     <link rel='stylesheet' href='/stylesheets/form.css' />
+    <link rel='stylesheet' href='/stylesheets/entryForm.css' />
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -25,37 +25,24 @@
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     <div class="card">
-                        <div class="card-header cardHeader-color">Register</div>
+                        <div class="card-header cardHeader-color">Entry</div>
                         <div class="card-body">
-                            <form name="account-form" onsubmit="return validateForm()" action="/register/createAccount" method="post">
+                            <form name="entry-form" action="" method="post" id="entry-form">
                                 <div class="form-group row">
-                                    <label for="first_name" class="col-md-4 col-form-label text-md-right">First Name</label>
+                                    <label for="date" class="col-md-4 col-form-label text-md-right">Date</label>
                                     <div class="col-md-6">
-                                        <input type="text" id="first_name" class="form-control" name="first_name" required>
+                                        <input type="date" id="date" class="form-control" name="date" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="last_name" class="col-md-4 col-form-label text-md-right">Last Name</label>
+                                    <label for="Title" class="col-md-4 col-form-label text-md-right">Title</label>
                                     <div class="col-md-6">
-                                        <input type="text" id="last_name" class="form-control" name="last_name" required>
+                                        <input type="text" id="Title" class="form-control" name="title" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">E-Mail Address</label>
                                     <div class="col-md-6">
-                                        <input type="text" id="email_address" class="form-control" name="email" required>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="password_1" class="col-md-4 col-form-label text-md-right">Password</label>
-                                    <div class="col-md-6">
-                                        <input type="password" id="password_1" name="password_1" class="form-control" required>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="password_2" class="col-md-4 col-form-label text-md-right">Confirm Password</label>
-                                    <div class="col-md-6">
-                                        <input type="password" id="password_2" name="password_2" class="form-control" onchange="validateForm()" required>
+                                        <textarea form="entry-form" name="entry-body" id="entry-body"></textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-6 offset-md-4">
