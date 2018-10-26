@@ -30,10 +30,7 @@ router.post("/login", (req, res, next) => {
 	var password = req.body.password_1.trim();
 	var getAccount = "SELECT * FROM users WHERE email = $1";
 
-	pool.connect((err, client, done) => {
-		if (err) throw err;
-		client.query(getAccount, [email], (err, qRes) => {
-			done();
+	pool.query(getAccount, [email], (err, qRes) => {
 
 			if (err) {
 				console.log(err.stack);
@@ -64,7 +61,6 @@ router.post("/login", (req, res, next) => {
 				});
 			}
 		});
-	});
 });
 
 router.get("/logout", (req, res, next) => {
