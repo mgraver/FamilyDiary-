@@ -3,6 +3,7 @@ var router = express.Router();
 
 const pool = require("./db");
 const registration = require("./registration");
+const journals = require("./journals");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
@@ -36,7 +37,8 @@ router.post("/login", (req, res, next) => {
             console.log(err.stack);
             res.status(500).send();
         } else {
-            //If no results return.
+
+            //If no results go back.
             console.log(qRes.rows.length);
             if (qRes.rows.length < 1) {
                 console.log("Entered Here");
@@ -50,6 +52,7 @@ router.post("/login", (req, res, next) => {
                     req.session.userID = qRes.rows[0].id;
                     req.session.first_name = qRes.rows[0].first;
                     req.session.last_name = qRes.rows[0].last;
+                    req.session.full_name = qRes.rows[0].first + " " + qRes.rows[0].last;
                     res.redirect("../"); //Go back to home.
                 } else {
                     console.log("Invalid password");
@@ -63,9 +66,11 @@ router.post("/login", (req, res, next) => {
 router.get("/logout", (req, res, next) => {
     //Removes ression and rebuilds it on next request.
     req.session.destroy();
-    res.redirect("../"); //Go back to home.
+    res.redirect("/home"); //Go back to home.
 });
 
+//Add other routers.
 router.use("/register", registration);
+router.use("/journals", journals);
 
 module.exports = router;

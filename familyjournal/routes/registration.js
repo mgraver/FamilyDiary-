@@ -14,8 +14,8 @@ router.get("/", (req, res, next) => {
 router.post("/createAccount", (req, res, next) => {
     console.log("createAccount");
     console.log(req.body);
-    var first_name = req.body.first_name.trim().toLowerCase();
-    var last_name = req.body.last_name.trim().toLowerCase();
+    var first_name = req.body.first_name.trim();
+    var last_name = req.body.last_name.trim();
     var email = req.body.email.trim().toLowerCase();
     var password = req.body.password_1.trim();
 
