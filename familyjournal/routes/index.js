@@ -1,21 +1,18 @@
 var express = require("express");
 var router = express.Router();
 
+const pool = require("./db");
 const registration = require("./registration");
-const { Pool } = require("pg");
 const bcrypt = require("bcrypt");
-const config = require("../serverConfig");
-
-const pool = new Pool(config);
 const saltRounds = 10;
 
-pool.on("error", (err, client) => {
-	console.error("Unexpected error on idle client", err);
-	process.exit(-1);
-});
+//Redirect everyone to home page.
+router.get("/", (req, res, next) => {
+	res.redirect("/home");
+})
 
 /* GET home page. */
-router.get("/", function(req, res, next) {
+router.get("/home", function(req, res, next) {
 	if (!req.session.userID)
 		res.render("home", { Navbar: "Login_Navbar", LoginName: "" });
 	else {
@@ -29,7 +26,7 @@ router.get("/", function(req, res, next) {
 });
 
 router.post("/login", (req, res, next) => {
-	var email = req.body.email.trim();
+	var email = req.body.email.trim().toLowerCase();
 	var password = req.body.password_1.trim();
 	var getAccount = "SELECT * FROM users WHERE email = $1";
 
@@ -42,7 +39,15 @@ router.post("/login", (req, res, next) => {
 				console.log(err.stack);
 				res.status(500).send();
 			} else {
-				console.log(qRes.rows[0]);
+				//If no results return.
+				console.log(qRes.rows.length);
+				if (qRes.rows.length < 1)
+				{
+					console.log("Entered Here");
+					res.redirect("../");
+					return;
+				}
+
 				let hash = qRes.rows[0].password;
 				bcrypt.compare(password, hash, function(err, pRes) {
 					if (pRes) {

@@ -1,17 +1,9 @@
 var express = require("express");
 var router = express.Router();
 
-const config = require("../serverConfig");
-const { Pool } = require("pg");
+const pool = require("./db");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
-
-const pool = new Pool(config);
-
-pool.on("error", (err, client) => {
-	console.error("Unexpected error on idle client", err);
-	process.exit(-1);
-});
 
 /* GET registration form */
 router.get("/", (req, res, next) => {
@@ -22,9 +14,9 @@ router.get("/", (req, res, next) => {
 router.post("/createAccount", (req, res, next) => {
 	console.log("createAccount");
 	console.log(req.body);
-	var first_name = req.body.first_name.trim();
-	var last_name = req.body.last_name.trim();
-	var email = req.body.email.trim();
+	var first_name = req.body.first_name.trim().toLowerCase();
+	var last_name = req.body.last_name.trim().toLowerCase();
+	var email = req.body.email.trim().toLowerCase();
 	var password = req.body.password_1.trim();
 
 	bcrypt.hash(password, saltRounds, function(err, hash) {
