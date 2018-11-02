@@ -7,7 +7,6 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title>Family Jornal-Entries</title>
-
     <link rel='stylesheet' href='/stylesheets/Nav.css' />
     <link rel='stylesheet' href='/stylesheets/list.css' />
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -31,18 +30,24 @@
                         <div class="card-body">
                             <table class="table table-hover">
                                 <thead>
+                                    <th scope="col">Date</th>
                                     <th scope="col">Title</th>
                                     <th scope="col">Entry</th>
-                                    <th scope="col">Date</th>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>
-                                            Example Entry
-                                        </td>
+                                        <td>11.12.18 </td>
+                                        <td>Example Entry</td>
                                         <td>Today is an exmample of what some entry text will look like...</td>
-                                        <td>11.12.18</td>
                                     </tr>
+                                    <% for(var i=0; i < entryList.length; i++) {%>
+                                        <tr>
+                                            <td> <a href="">
+                                                <%= entryList[i].date %></a></td>
+                                            <td><%= entryList[i].title %></td> 
+                                            <td><%= entryList[i].desci %></td>
+                                        </tr>
+                                    <% } %>
                                 </tbody>
                             </table>
                         </div>
