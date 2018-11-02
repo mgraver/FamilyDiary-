@@ -17,7 +17,7 @@
 </head>
 
 <body>
-    <%- include('Login_Navbar',{});%>
+    <%- include('Logout_Navbar',{Name:LoginName});%>
     <!-- Page Content -->
     <main class="my-form">
         <div class="cotainer">
@@ -26,7 +26,7 @@
                     <div class="card">
                         <div class="card-header cardHeader-color">Entry</div>
                         <div class="card-body">
-                            <form name="entry-form" action="" method="post" id="entry-form">
+                            <form name="entry-form" action="addEntry" method="post" id="entry-form">
                                 <div class="form-group row justify-content-end">
                                     <label for="date" class="col-md-4 col-form-label text-md-right">Date</label>
                                     <div class="col-sm-4">
@@ -40,7 +40,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group row justify-content-start">
-                                    <textarea cols="90" rows="20" form="entry-form" name="entry-body" id="entry-body" class="form-control" placeholder="Dear journal..."></textarea>
+                                    <textarea cols="90" rows="20" form="entry-form" name="text" id="entry-body" class="form-control" placeholder="Dear journal..."></textarea>
                                 </div>
                                 <div class="row justify-content-center">
                                     <div class="col-xs-1">
