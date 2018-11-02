@@ -73,6 +73,7 @@ router.get("/:journalId/:journalName/entries", (req, res, next) => {
 			for (let i in results) {
 				entries.push(results[i].Metadata);
 			}
+
 			res.render("entryList", {
 				LoginName: req.session.full_name,
 				JournalName: jName,
@@ -123,7 +124,8 @@ router.post("/:journalId/:journalName/addEntry", (req, res, next) => {
 				Metadata: {
 					title: entry.title,
 					date: entry.date,
-					desci: entry.text.substring(0, 25)
+					desci: entry.text.substring(0, 53),
+					keyName: qRes.rows[0].id.toString()
 				}
 			};
 
@@ -136,5 +138,38 @@ router.post("/:journalId/:journalName/addEntry", (req, res, next) => {
 		}
 	);
 });
+
+router.get(
+	"/:journalId/:journalName/:entryKey/:entryTitle/entry",
+	(req, res, next) => {
+		var s3 = new aws.S3();
+
+		var params = {
+			Bucket: bucketName,
+			Key:
+				req.session.userID +
+				"/" +
+				req.params.journalId +
+				"/" +
+				req.params.entryKey +
+				".json"
+		};
+
+		s3.getObject(params, (err, data) => {
+			if (err) console.log(err);
+			else {
+				let entryJson = data.Body.toString();
+				var entry = JSON.parse(entryJson);
+
+				res.render("entryDisplay", {
+					LoginName: req.session.full_name,
+					journalTitle: entry.title,
+					journalDate: entry.date,
+					journalText: entry.text
+				});
+			}
+		});
+	}
+);
 
 module.exports = router;

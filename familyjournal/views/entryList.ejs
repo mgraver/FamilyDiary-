@@ -41,12 +41,17 @@
                                         <td>Today is an exmample of what some entry text will look like...</td>
                                     </tr>
                                     <% for(var i=0; i < entryList.length; i++) {%>
-                                        <tr>
-                                            <td> <a href="">
+                                    <tr>
+                                        <td><a 
+                                            href="/journals/<%=JournalId%>/<%=JournalName%>/<%=entryList[i].keyname%>/<%=entryList[i].title%>/entry">
                                                 <%= entryList[i].date %></a></td>
-                                            <td><%= entryList[i].title %></td> 
-                                            <td><%= entryList[i].desci %></td>
-                                        </tr>
+                                        <td>
+                                            <%= entryList[i].title %>
+                                        </td>
+                                        <td>
+                                            <%= entryList[i].desci %>...
+                                        </td>
+                                    </tr>
                                     <% } %>
                                 </tbody>
                             </table>
