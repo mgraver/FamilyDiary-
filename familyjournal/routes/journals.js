@@ -5,6 +5,59 @@ const pool = require("./db");
 const aws = require("../AWSconfig");
 const bucketName = "byui-seniorproject";
 
+const multer = require("multer");
+const multerS3 = require("multer-s3");
+const s3 = new aws.S3();
+var storageMs3 = multerS3({
+	s3: s3,
+	bucket: bucketName,
+	key: (mReq, file, cb) => {
+		pool.query("SELECT last_value FROM entries_id_seq;", (err, qRes) => {
+			var lastValue = qRes.rows[0].last_value;
+			if (lastValue == 1)  //Have to use this if statement only when starting empty.
+				pool.query("SELECT * FROM entries", (err, entriesRes) => {
+					if (entriesRes.rows.length > 0) {
+						lastValue++;
+						cb(
+							null,
+							mReq.session.userID +
+								"/" +
+								mReq.params.journalId +
+								"/" +
+								lastValue +
+								"/" +
+								file.originalname
+						);
+					} else
+						cb(
+							null,
+							mReq.session.userID +
+								"/" +
+								mReq.params.journalId +
+								"/" +
+								lastValue +
+								"/" +
+								file.originalname
+						);
+				});
+			else
+				cb(
+					null,
+					mReq.session.userID +
+						"/" +
+						mReq.params.journalId +
+						"/" +
+						++lastValue +
+						"/" +
+						file.originalname
+				);
+		});
+	}
+});
+
+//Setup file upload.
+const upload = multer({ storage: storageMs3 });
+
 //Reroute the user back to home if they arent logged in.
 router.use((req, res, next) => {
 	if (req.session.userID) next();
@@ -42,7 +95,6 @@ router.get("/:journalId/:journalName/entries", (req, res, next) => {
 	var entries = [];
 	var promises = [];
 
-	var s3 = new aws.S3();
 	var params = {
 		Bucket: bucketName,
 		Delimiter: "/",
@@ -94,56 +146,62 @@ router.get("/:journalId/:journalName/createEntry", (req, res, next) => {
 	});
 });
 
-router.post("/:journalId/:journalName/addEntry", (req, res, next) => {
-	const addEntrySQL =
-		"INSERT INTO entries (userid, journalid, title) VALUES ($1, $2, $3) RETURNING id";
-	var entry = {};
-	var s3 = new aws.S3();
+//NOTE: multer middleware must be called first before the rest of the form data can be accessed.
+router.post(
+	"/:journalId/:journalName/addEntry",
+	upload.array("photos", 12),
+	(req, res, next) => {
+		const addEntrySQL =
+			"INSERT INTO entries (userid, journalid, title) VALUES ($1, $2, $3) RETURNING id";
+		var entry = {};
 
-	entry.date = req.body.date;
-	entry.title = req.body.title;
-	entry.text = req.body.text;
+		console.log(req);
 
-	pool.query(
-		addEntrySQL,
-		[req.session.userID, req.params.journalId, entry.title],
-		(err, qRes) => {
-			var entryJson = JSON.stringify(entry);
-			var entryBuffer = Buffer.from(entryJson);
+		entry.date = req.body.date;
+		entry.title = req.body.title;
+		entry.text = req.body.text;
 
-			var params = {
-				Bucket: bucketName,
-				Body: entryBuffer,
-				Key:
-					req.session.userID +
-					"/" +
-					req.params.journalId +
-					"/" +
-					qRes.rows[0].id +
-					".json",
-				Metadata: {
-					title: entry.title,
-					date: entry.date,
-					desci: entry.text.substring(0, 53),
-					keyName: qRes.rows[0].id.toString()
-				}
-			};
+		pool.query(
+			addEntrySQL,
+			[req.session.userID, req.params.journalId, entry.title],
+			(err, qRes) => {
+				var entryJson = JSON.stringify(entry);
+				var entryBuffer = Buffer.from(entryJson);
 
-			s3.putObject(params, (err, data) => {
-				if (err) {
-					console.log("Error", err);
-				}
-				res.redirect("entries");
-			});
-		}
-	);
-});
+				//Params so aws can put json in write place in bucket.
+				var params = {
+					Bucket: bucketName,
+					Body: entryBuffer,
+					Key:
+						req.session.userID +
+						"/" +
+						req.params.journalId +
+						"/" +
+						qRes.rows[0].id +
+						".json",
+					Metadata: {
+						title: entry.title,
+						date: entry.date,
+						desci: entry.text.substring(0, 53),
+						keyName: qRes.rows[0].id.toString()
+					}
+				};
+
+				//Put the json in the bucket and head back to the entries
+				s3.putObject(params, (err, data) => {
+					if (err) {
+						console.log("Error", err);
+					}
+					res.redirect("entries");
+				});
+			}
+		);
+	}
+);
 
 router.get(
 	"/:journalId/:journalName/:entryKey/:entryTitle/entry",
 	(req, res, next) => {
-		var s3 = new aws.S3();
-
 		var params = {
 			Bucket: bucketName,
 			Key:
