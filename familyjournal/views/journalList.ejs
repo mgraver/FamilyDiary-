@@ -38,12 +38,6 @@
                                     <th scope="col">Description</th>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>
-                                            Example Journal
-                                        </td>
-                                        <td>Some descriptive text that they put for the journal.</td>
-                                    </tr>
                                     <% for(var i=0; i < Journals.length; i++) {%>
                                         <tr>
                                             <td> <a href="journals/<%= Journals[i].id %>/<%= Journals[i].title%>/entries">

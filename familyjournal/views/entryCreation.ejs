@@ -26,7 +26,7 @@
                     <div class="card">
                         <div class="card-header cardHeader-color">Entry</div>
                         <div class="card-body">
-                            <form name="entry-form" action="addEntry" method="post" id="entry-form">
+                            <form name="entry-form" action="addEntry" method="post" id="entry-form" enctype="multipart/form-data">
                                 <div class="form-group row justify-content-end">
                                     <label for="date" class="col-md-4 col-form-label text-md-right">Date</label>
                                     <div class="col-sm-4">
@@ -42,6 +42,10 @@
                                 <div class="form-group row justify-content-start">
                                     <textarea cols="90" rows="20" form="entry-form" name="text" id="entry-body" class="form-control" placeholder="Dear journal..."></textarea>
                                 </div>
+                                <div class="row justify-content-start" id="inputDiv">
+                                    <input type="file" name="photos" id="pictureInput" accept="image/*" multiple>
+                                </div>
+                                <div id="fileInfo"></div>
                                 <div class="row justify-content-center">
                                     <div class="col-xs-1">
                                         <input type="submit" class="btn btn-theme">

@@ -35,18 +35,13 @@
                                     <th scope="col">Entry</th>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>11.12.18 </td>
-                                        <td>Example Entry</td>
-                                        <td>Today is an exmample of what some entry text will look like...</td>
-                                    </tr>
                                     <% for(var i=0; i < entryList.length; i++) {%>
                                     <tr>
                                         <td><a 
                                             href="/journals/<%=JournalId%>/<%=JournalName%>/<%=entryList[i].keyname%>/<%=entryList[i].title%>/entry">
                                                 <%= entryList[i].date %></a></td>
                                         <td>
-                                            <%= entryList[i].title %>
+                                            <%= entryList[i].title.substring(0,10) %>
                                         </td>
                                         <td>
                                             <%= entryList[i].desci %>...
