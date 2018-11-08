@@ -41,7 +41,11 @@
                                             href="/journals/<%=JournalId%>/<%=JournalName%>/<%=entryList[i].keyname%>/<%=entryList[i].title%>/entry">
                                                 <%= entryList[i].date %></a></td>
                                         <td>
-                                            <%= entryList[i].title.substring(0,10) %>
+                                            <% if(entryList[i].title.length > 35) { %>
+                                                <%= entryList[i].title.substring(0,35) %>...
+                                            <% } else { %>
+                                                <%= entryList[i].title %>
+                                            <% } %>
                                         </td>
                                         <td>
                                             <%= entryList[i].desci %>...

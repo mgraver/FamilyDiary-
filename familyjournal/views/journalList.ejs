@@ -41,7 +41,12 @@
                                     <% for(var i=0; i < Journals.length; i++) {%>
                                         <tr>
                                             <td> <a href="journals/<%= Journals[i].id %>/<%= Journals[i].title%>/entries">
-                                                <%= Journals[i].title %></a></td>
+                                                <% if(Journals[i].title.length > 35) { %>
+                                                    <%= Journals[i].title.substring(0,35) %>...
+                                                <% } else { %>
+                                                    <%= Journals[i].title %>
+                                                <% } %>
+                                                </a></td>
                                             <td><%= Journals[i].description %></td> 
                                         </tr>
                                     <% } %>
