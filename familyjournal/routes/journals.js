@@ -14,7 +14,8 @@ var storageMs3 = multerS3({
 	key: (mReq, file, cb) => {
 		pool.query("SELECT last_value FROM entries_id_seq;", (err, qRes) => {
 			var lastValue = qRes.rows[0].last_value;
-			if (lastValue == 1)  //Have to use this if statement only when starting empty.
+			if (lastValue == 1)
+				//Have to use this if statement only when starting empty.
 				pool.query("SELECT * FROM entries", (err, entriesRes) => {
 					if (entriesRes.rows.length > 0) {
 						lastValue++;
@@ -155,8 +156,6 @@ router.post(
 			"INSERT INTO entries (userid, journalid, title) VALUES ($1, $2, $3) RETURNING id";
 		var entry = {};
 
-		console.log(req);
-
 		entry.date = req.body.date;
 		entry.title = req.body.title;
 		entry.text = req.body.text;
@@ -202,30 +201,78 @@ router.post(
 router.get(
 	"/:journalId/:journalName/:entryKey/:entryTitle/entry",
 	(req, res, next) => {
-		var params = {
+		var promises = [];
+		var photos = [];
+
+		var listParams = {
 			Bucket: bucketName,
-			Key:
+			Delimiter: "/",
+			Prefix:
 				req.session.userID +
 				"/" +
 				req.params.journalId +
 				"/" +
 				req.params.entryKey +
-				".json"
+				"/"
 		};
 
-		s3.getObject(params, (err, data) => {
-			if (err) console.log(err);
-			else {
-				let entryJson = data.Body.toString();
-				var entry = JSON.parse(entryJson);
+		s3.listObjectsV2(listParams, (err, data) => {
+			if (err) console.log(err, err.stack);
+			for (let i = 0; i < data.Contents.length; i++) {
+				let params = {
+					Bucket: bucketName,
+					Key: data.Contents[i].Key,
+					Expires: (60 * 20) 
+				};
+
+				promises.push(
+					new Promise((success, reject) => {
+						s3.getSignedUrl("getObject", params, (err, url) => {
+							if (err) reject(err);
+							else success(url);
+						});
+					})
+				);
+			}
+
+			let params = {
+				Bucket: bucketName,
+				Key:
+					req.session.userID +
+					"/" +
+					req.params.journalId +
+					"/" +
+					req.params.entryKey +
+					".json"
+			};
+
+			promises.push(
+				new Promise((success, reject) => {
+					s3.getObject(params, (err, data) => {
+						if (err) reject(err);
+						else success(data);
+					});
+				})
+			);
+
+			Promise.all(promises).then(results => {
+				var entry;
+				for (i in results) {
+					if (typeof results[i] === "string") photos.push(results[i]);
+					else {
+						let entryJson = results[i].Body.toString();
+						entry = JSON.parse(entryJson);
+					}
+				}
 
 				res.render("entryDisplay", {
 					LoginName: req.session.full_name,
 					journalTitle: entry.title,
 					journalDate: entry.date,
-					journalText: entry.text
+					journalText: entry.text,
+					entryPhotos: photos
 				});
-			}
+			});
 		});
 	}
 );

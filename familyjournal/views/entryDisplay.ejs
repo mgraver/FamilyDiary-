@@ -18,7 +18,7 @@
 <body>
     <%- include('Logout_Navbar',{Name:LoginName});%>
     <!-- Page Content -->
-    <main class="my-form">
+    <main>
         <div class="cotainer">
             <div class="row justify-content-center">
                 <div class="col-md-8">
@@ -38,6 +38,17 @@
                 </div>
             </div>
         </div>
+        <% if (entryPhotos.length > 0) { %>
+        <div class="cotainer">
+            <div class="row">
+                <% for (i in entryPhotos) { %>
+                    <div class="col-lg-3 col-md-4 col-xs-6 pic">
+                        <img src="<%= entryPhotos[i] %>" class="img-thumbnail img-fluid">
+                    </div>
+                <% } %>
+            </div>
+        </div>
+        <% } %>
     </main>
 </body>
 
