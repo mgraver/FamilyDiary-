@@ -257,7 +257,7 @@ router.get(
 
 			Promise.all(promises).then(results => {
 				var entry;
-				for (i in results) {
+				for (let i in results) {
 					if (typeof results[i] === "string") photos.push(results[i]);
 					else {
 						let entryJson = results[i].Body.toString();
