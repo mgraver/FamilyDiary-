@@ -16,6 +16,7 @@ var storageMs3 = multerS3({
 			var lastValue = qRes.rows[0].last_value;
 			if (lastValue == 1)
 				//Have to use this if statement only when starting empty.
+				//Otherwise the Id could be increamented when it shouldn't.
 				pool.query("SELECT * FROM entries", (err, entriesRes) => {
 					if (entriesRes.rows.length > 0) {
 						lastValue++;

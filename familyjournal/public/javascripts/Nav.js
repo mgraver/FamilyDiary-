@@ -12,11 +12,21 @@ function checkRequests() {
 function acceptRequest(id) {
 	removeRequest(id);
 
+	$.ajax({
+		method: 'GET',
+		url: '/friends/acceptRequest/' + id, 
+	});
+
 	checkRequests();
 }
 
 function declineRequest(id) {
 	removeRequest(id);
+
+	$.ajax({
+		method: 'GET',
+		url: '/friends/declineRequest/' + id, 
+	});
 
 	checkRequests();
 }

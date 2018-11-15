@@ -4,6 +4,7 @@ var router = express.Router();
 const pool = require("./db");
 const registration = require("./registration");
 const journals = require("./journals");
+const friendsRouter = require("./friendRouter")
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
@@ -72,5 +73,5 @@ router.get("/logout", (req, res, next) => {
 //Add other routers.
 router.use("/register", registration);
 router.use("/journals", journals);
-
+router.use("/friends", friendsRouter);
 module.exports = router;
