@@ -40,6 +40,16 @@
     width: 49%;
 }
 
+#friendsDDD {
+    min-width: 300px;
+    font-size: 13px;
+}
+
+#requestList {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
 @media(max-width:768px){
     #login-dp{
         background-color: inherit;
@@ -55,4 +65,14 @@
 	color: #FFF;
 	background-color: #18BC9C; 
 	border-color: rgb(29,142,118);
+}
+
+.dropdown-item:active {
+    background-color: #fff;
+    color:black;
+}
+
+small {
+    color: #696969;
+    margin: 15px;
 }

@@ -7,6 +7,48 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
+                <!-- Friends Dropdown-->
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Friends</a>
+                    <div class="dropdown-menu" id="friendsDDD">
+                        <h6 class="dropdown-header">Requests:</h6>
+                        <div class="dropdown-divider"></div>
+                        <div id="requestList">
+                            <div class="dropdown-item" id="request1">
+                                <h6> Test Name 1 </h6>
+                                <span class="text-right">
+                                <input type="button" class="btn btn-primary btn-sm" value="Accept" onclick="acceptRequest('request1')">
+                                <input type="button" class="btn btn-light btn-sm" value="Decline" onclick="declineRequest('request1')">
+                            </span>
+                            </div>
+                            <div class="dropdown-item" id="request2">
+                                <h6> Test Name 2 </h6>
+                                <span class="text-right">
+                                <input type="button" class="btn btn-primary btn-sm" value="Accept" onclick="acceptRequest('request2')">
+                                <input type="button" class="btn btn-light btn-sm" value="Decline">
+                            </span>
+                            </div>
+                            <div class="dropdown-item" id="request3">
+                                <h6> Test Name 3 </h6>
+                                <span class="text-right">
+                                <input type="button" class="btn btn-primary btn-sm" value="Accept" onclick="acceptRequest('request3')">
+                                <input type="button" class="btn btn-light btn-sm" value="Decline">
+                            </span>
+                            </div>
+                            <div class="dropdown-item" id="request4">
+                                <h6> Test Name 4 </h6>
+                                <span class="text-right">
+                                <input type="button" class="btn btn-primary btn-sm" value="Accept" onclick="acceptRequest('request4')">
+                                <input type="button" class="btn btn-light btn-sm" value="Decline">
+                            </span>
+                            </div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item">
+                            <h6><a href="#">Friends List</a></h6>
+                        </div>
+                    </div>
+                </li>
                 <li class="nav-item" id="Jornals">
                     <a class="nav-link" href="/journals">Journals</a>
                 </li>
