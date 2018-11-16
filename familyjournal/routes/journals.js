@@ -70,8 +70,10 @@ router.get("/", (req, res, next) => {
 	const getJournals = "SELECT * FROM journals WHERE userid = $1";
 	pool.query(getJournals, [req.session.userID], (err, qRes) => {
 		res.render("journalList", {
+			Navbar: "Logout_Navbar",
 			LoginName: req.session.full_name,
-			Journals: qRes.rows
+			Journals: qRes.rows,
+			friendRequests: req.session.requests
 		});
 	});
 });
@@ -129,10 +131,12 @@ router.get("/:journalId/:journalName/entries", (req, res, next) => {
 			}
 
 			res.render("entryList", {
+				Navbar: "Logout_Navbar",
 				LoginName: req.session.full_name,
 				JournalName: jName,
 				JournalId: jId,
-				entryList: entries
+				entryList: entries,
+				friendRequests: req.session.requests
 			});
 		});
 	});
@@ -142,9 +146,11 @@ router.get("/:journalId/:journalName/createEntry", (req, res, next) => {
 	let jName = req.params.journalName;
 	let jId = req.params.journalId;
 	res.render("entryCreation", {
+		Navbar: "Logout_Navbar",
 		LoginName: req.session.full_name,
 		JournalName: jName,
-		JournalId: jId
+		JournalId: jId,
+		friendRequests: req.session.requests
 	});
 });
 
@@ -267,11 +273,13 @@ router.get(
 				}
 
 				res.render("entryDisplay", {
+					Navbar: "Logout_Navbar",
 					LoginName: req.session.full_name,
 					journalTitle: entry.title,
 					journalDate: entry.date,
 					journalText: entry.text,
-					entryPhotos: photos
+					entryPhotos: photos,
+					friendRequests: req.session.requests
 				});
 			});
 		});

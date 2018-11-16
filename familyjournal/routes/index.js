@@ -16,14 +16,15 @@ router.get("/", (req, res, next) => {
 /* GET home page. */
 router.get("/home", function(req, res, next) {
     if (!req.session.userID)
-        res.render("home", { Navbar: "Login_Navbar", LoginName: "" });
+        res.render("home", { Navbar: "Login_Navbar", LoginName: "", friendRequests:[]});
     else {
-        let first = req.session.first_name;
-        let last = req.session.last_name;
-        res.render("home", {
-            Navbar: "Logout_Navbar",
-            LoginName: first + " " + last
-        });
+        res.render("home", 
+            { 
+                Navbar: "Logout_Navbar", 
+                LoginName: req.session.full_name,
+                friendRequests: req.session.requests
+            }
+        );
     }
 });
 
@@ -54,7 +55,13 @@ router.post("/login", (req, res, next) => {
                     req.session.first_name = qRes.rows[0].first;
                     req.session.last_name = qRes.rows[0].last;
                     req.session.full_name = qRes.rows[0].first + " " + qRes.rows[0].last;
-                    res.redirect("../"); //Go back to home.
+
+                    var getRequestsSql = "SELECT requests.id, users.first, users.last FROM requests INNER JOIN users\
+                            ON requests.sender = users.id WHERE requests.receiver = $1";
+                    pool.query(getRequestsSql, [req.session.userID], (err, qRes) => {
+                        req.session.requests = qRes.rows;
+                        res.redirect("../"); //Go back to home.
+                    });
                 } else {
                     console.log("Invalid password");
                     res.redirect("../../"); //Go back to home.
