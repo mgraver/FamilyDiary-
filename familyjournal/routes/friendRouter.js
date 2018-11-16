@@ -20,22 +20,40 @@ router.get("/", (req, res, next) => {
 
 router.get("/acceptRequest/:requestId", (req, res, next) => {
 	let rId = req.params.requestId;
-	console.log("Received accept action for request " + rId);
 
 	//Before acceptance make sure that user who sent request
 	//was the receiver.
-	//e.g if (req.session.user != qRes.rows[0].receiver) stop anyfurther actions.
-	res.status(200);
+	pool.connect((err, client, done) => {
+		client.query("SELECT receiver FROM requests WHERE id = $1", [rId], (err, qRes) => {
+			if (req.session.userID != qRes.rows[0].receiver)
+			{
+				done();
+				return;
+			}
+		});
+	});
 });
 
 router.get("/declineRequest/:requestId", (req, res, next) => {
 	let rId = req.params.requestId;
 	console.log("Received decline action for request " + rId);
-
+	
 	//Before acceptance make sure that user who sent request
 	//was the receiver.
 	//e.g if (req.session.user != qRes.rows[0].receiver) stop anyfurther actions.
-	res.status(200);
+	pool.connect((err, client, done) => {
+		client.query("SELECT receiver FROM requests WHERE id = $1", [rId], (err, qRes) => {
+			if (req.session.userID != qRes.rows[0].receiver)
+			{
+				done();
+				return;
+			}
+			client.query("DELETE FROM requests WHERE id = $1", [rId], (err, qRes) => {
+				done();
+				return;
+			})
+		});
+	});
 });
 
 router.post("/requestFriend", (req, res, next) => {
