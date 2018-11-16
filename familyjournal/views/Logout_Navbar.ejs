@@ -14,34 +14,19 @@
                         <h6 class="dropdown-header">Requests:</h6>
                         <div class="dropdown-divider"></div>
                         <div id="requestList">
-                            <div class="dropdown-item" id="request1">
-                                <h6> Test Name 1 </h6>
-                                <span class="text-right">
-                                <input type="button" class="btn btn-primary btn-sm" value="Accept" onclick="acceptRequest('request1')">
-                                <input type="button" class="btn btn-light btn-sm" value="Decline" onclick="declineRequest('request1')">
-                            </span>
-                            </div>
-                            <div class="dropdown-item" id="request2">
-                                <h6> Test Name 2 </h6>
-                                <span class="text-right">
-                                <input type="button" class="btn btn-primary btn-sm" value="Accept" onclick="acceptRequest('request2')">
-                                <input type="button" class="btn btn-light btn-sm" value="Decline">
-                            </span>
-                            </div>
-                            <div class="dropdown-item" id="request3">
-                                <h6> Test Name 3 </h6>
-                                <span class="text-right">
-                                <input type="button" class="btn btn-primary btn-sm" value="Accept" onclick="acceptRequest('request3')">
-                                <input type="button" class="btn btn-light btn-sm" value="Decline">
-                            </span>
-                            </div>
-                            <div class="dropdown-item" id="request4">
-                                <h6> Test Name 4 </h6>
-                                <span class="text-right">
-                                <input type="button" class="btn btn-primary btn-sm" value="Accept" onclick="acceptRequest('request4')">
-                                <input type="button" class="btn btn-light btn-sm" value="Decline">
-                            </span>
-                            </div>
+                            <% if (fRequests.length == 0) {%>
+                                <small>You have no requests at this time.</small>
+                            <%} else { %>
+                                <% for (i in fRequests) { %>
+                                    <div class="dropdown-item" id="<%= fRequests[i].id %>">
+                                        <h6> <%= fRequests[i].first%>  <%= fRequests[i].last%></h6>
+                                        <span class="text-right">
+                                            <input type="button" class="btn btn-primary btn-sm" value="Accept" onclick="acceptRequest('<%= fRequests[i].id %>')">
+                                            <input type="button" class="btn btn-light btn-sm" value="Decline" onclick="declineRequest('<%= fRequests[i].id %>')">
+                                        </span>
+                                    </div>
+                                <% } %>
+                            <% } %>
                         </div>
                         <div class="dropdown-divider"></div>
                         <div class="dropdown-item">

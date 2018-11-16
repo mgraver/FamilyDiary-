@@ -12,10 +12,11 @@
     <script type="text/javascript" src="/javascripts/Nav.js"></script>
     <link rel='stylesheet' href='/stylesheets/Nav.css' />
     <link rel='stylesheet' href='/stylesheets/friendsPage.css' />
+    <script type="text/javascript" src="/javascripts/friendList.js"></script>
 </head>
 
 <body>
-    <%- include(Navbar,{Name:LoginName});%>
+    <%- include(Navbar, {Name:LoginName, fRequests:friendRequests});%>
     <!-- Page Content -->
     <div class="container">
         <div class="row justify-content-center">
@@ -26,9 +27,9 @@
                         <form id="friendRequestForm">
                             <div class="form-row">
                                 <div class="col-md-6">
-                                    <input type="email" class="form-control" id="friendEmail" name="email" placeholder="Enter friends email to send friend invite.">
+                                    <input type="email" class="form-control" id="friendEmail" name="email" placeholder="Enter friends email to send friend invite." required>
                                 </div>
-                                <button type="submit" form="friendRequestForm" class="btn btn-primary">Send</button>
+                                <input type="submit" name="submit" value="Send" class="btn btn-primary">
                             </div>
                         </form>
                         <hr />
@@ -45,5 +46,4 @@
         </div>
     </div>
 </body>
-
 </html>
