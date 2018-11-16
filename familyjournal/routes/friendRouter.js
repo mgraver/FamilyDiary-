@@ -24,12 +24,33 @@ router.get("/acceptRequest/:requestId", (req, res, next) => {
 	//Before acceptance make sure that user who sent request
 	//was the receiver.
 	pool.connect((err, client, done) => {
-		client.query("SELECT receiver FROM requests WHERE id = $1", [rId], (err, qRes) => {
+		client.query("SELECT receiver, sender FROM requests WHERE id = $1", [rId], (err, qRes) => {
 			if (req.session.userID != qRes.rows[0].receiver)
 			{
 				done();
 				return;
 			}
+			let addFriend = "INSERT INTO friends (friend1, friend2) VALUES ($1, $2)";
+			var promises = [];
+
+			promises.push(new Promise( (success, reject) => {
+				client.query(addFriend, [qRes.rows[0].sender, qRes.rows[0].receiver], (err, qRes) => {
+					if (err) reject(err);
+					success(qRes);
+				});
+			}));
+
+			promises.push(new Promise((success, reject) => {
+				client.query("DELETE FROM requests WHERE id = $1", [rId], (err, qRes) => {
+					if (err) reject(err);
+					success(qRes);
+				});
+			}));
+			
+			Promise.all(promises).then(results => {
+				done();
+				return;
+			})
 		});
 	});
 });
