@@ -11,10 +11,31 @@ router.use((req, res, next) => {
 
 //Redirect everyone to home page.
 router.get("/", (req, res, next) => {
-	res.render("friendsList", {
-		Navbar: "Logout_Navbar",
-		LoginName: req.session.full_name,
-		friendRequests: req.session.requests
+	let getFriendsSql = "SELECT users.first, users.last, users.id FROM users INNER JOIN friends\
+	ON users.id = friend1 OR users.id = friend2\
+	WHERE friend1 = $1 OR friend2 = $1";
+	var friends = [];
+
+	pool.query(getFriendsSql, [req.session.userID], (err, qRes) => {
+		if (err)
+		{
+			console.log(err.stack)
+		}
+		else
+		{
+			let results = qRes.rows;
+			for (i in results) {
+				if (results[i].id != req.session.userID)
+					friends.push(results[i]);
+			}
+		}
+
+		res.render("friendsList", {
+			Navbar: "Logout_Navbar",
+			LoginName: req.session.full_name,
+			friendRequests: req.session.requests,
+			friendsList: friends
+		});
 	});
 });
 
@@ -46,7 +67,7 @@ router.get("/acceptRequest/:requestId", (req, res, next) => {
 					success(qRes);
 				});
 			}));
-			
+
 			Promise.all(promises).then(results => {
 				done();
 				return;
