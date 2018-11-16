@@ -24,7 +24,7 @@ router.get("/", (req, res, next) => {
 		else
 		{
 			let results = qRes.rows;
-			for (i in results) {
+			for (let i in results) {
 				if (results[i].id != req.session.userID)
 					friends.push(results[i]);
 			}
