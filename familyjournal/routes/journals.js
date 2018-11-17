@@ -80,13 +80,14 @@ router.get("/", (req, res, next) => {
 
 router.post("/createJournal", (req, res, next) => {
 	const makeJournal =
-		"INSERT INTO journals (userid, title, description) VALUES ($1, $2, $3)";
+		"INSERT INTO journals (userid, title, description, shared) VALUES ($1, $2, $3, $4)";
 	const title = req.body.title;
 	const description = req.body.description;
+	const shared = req.body.shared ? true : false;
 
 	pool.query(
 		makeJournal,
-		[req.session.userID, title, description],
+		[req.session.userID, title, description, shared],
 		(err, qRes) => {
 			res.redirect("/journals");
 		}

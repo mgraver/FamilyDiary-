@@ -42,6 +42,10 @@ router.get("/", (req, res, next) => {
 router.get("/acceptRequest/:requestId", (req, res, next) => {
 	let rId = req.params.requestId;
 
+	for (let i in req.session.requests)
+		if (rId == req.session.requests[i].id)
+			req.session.requests.splice(i, 1);
+
 	//Before acceptance make sure that user who sent request
 	//was the receiver.
 	pool.connect((err, client, done) => {
@@ -78,8 +82,11 @@ router.get("/acceptRequest/:requestId", (req, res, next) => {
 
 router.get("/declineRequest/:requestId", (req, res, next) => {
 	let rId = req.params.requestId;
-	console.log("Received decline action for request " + rId);
 	
+	for (let i in req.session.requests)
+		if (rId == req.session.requests[i].id)
+			req.session.requests.splice(i, 1);
+
 	//Before acceptance make sure that user who sent request
 	//was the receiver.
 	//e.g if (req.session.user != qRes.rows[0].receiver) stop anyfurther actions.
