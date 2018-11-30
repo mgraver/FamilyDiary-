@@ -40,7 +40,7 @@
                                     <% for(var i=0; i < entryList.length; i++) {%>
                                     <tr>
                                         <td><a 
-                                            href="/journals/<%=JournalId%>/<%=JournalName%>/<%=entryList[i].keyname%>/<%=entryList[i].title%>/entry">
+                                            href="<%=entryList[i].keyname%>/<%=entryList[i].title%>/entry">
                                                 <%= entryList[i].date %></a></td>
                                         <td>
                                             <% if(entryList[i].title.length > 35) { %>
