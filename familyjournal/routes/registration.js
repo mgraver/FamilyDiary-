@@ -7,13 +7,19 @@ const saltRounds = 10;
 
 /* GET registration form */
 router.get("/", (req, res, next) => {
-    res.render("register.ejs", {});
+    res.render("register.ejs", {
+        form: {
+            first: '',
+            last: '',
+            email: '',
+            pass: ''
+        },
+        errors: { email: false }
+    });
 });
 
 /*POST form data for account creation*/
 router.post("/createAccount", (req, res, next) => {
-    console.log("createAccount");
-    console.log(req.body);
     var first_name = req.body.first_name.trim();
     var last_name = req.body.last_name.trim();
     var email = req.body.email.trim().toLowerCase();
@@ -29,7 +35,16 @@ router.post("/createAccount", (req, res, next) => {
             console.log("Pool query.");
             if (err) {
                 console.log(err.stack);
-                res.status(500).send();
+                if (err.code == 23505)
+                    res.render("register.ejs", {
+                        form: {
+                            first: first_name,
+                            last: last_name,
+                            email: email,
+                            pass: password
+                        },
+                        errors: { email: true }
+                    });
             } else {
                 console.log(qRes.rows[0]);
                 req.session.userID = qRes.rows[0].id;
@@ -37,7 +52,6 @@ router.post("/createAccount", (req, res, next) => {
                 req.session.last_name = qRes.rows[0].last;
                 req.session.requests = [];
                 res.redirect("/home"); //Go back to home.
-
             }
         });
     });
