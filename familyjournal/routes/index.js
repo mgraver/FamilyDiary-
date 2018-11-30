@@ -27,6 +27,7 @@ router.get("/home", function(req, res, next) {
             Navbar: "Logout_Navbar",
             LoginName: req.session.full_name,
             friendRequests: req.session.requests
+            invalidLogin: false
         });
     }
 });
