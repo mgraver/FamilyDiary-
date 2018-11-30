@@ -4,27 +4,30 @@ var router = express.Router();
 const pool = require("./db");
 const registration = require("./registration");
 const journals = require("./journals");
-const friendsRouter = require("./friendRouter")
+const friendsRouter = require("./friendRouter");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
 //Redirect everyone to home page.
 router.get("/", (req, res, next) => {
     res.redirect("/home");
-})
+});
 
 /* GET home page. */
 router.get("/home", function(req, res, next) {
     if (!req.session.userID)
-        res.render("home", { Navbar: "Login_Navbar", LoginName: "", friendRequests:[]});
+        res.render("home", {
+            Navbar: "Login_Navbar",
+            LoginName: "",
+            friendRequests: [],
+            invalidLogin: false
+        });
     else {
-        res.render("home", 
-            { 
-                Navbar: "Logout_Navbar", 
-                LoginName: req.session.full_name,
-                friendRequests: req.session.requests
-            }
-        );
+        res.render("home", {
+            Navbar: "Logout_Navbar",
+            LoginName: req.session.full_name,
+            friendRequests: req.session.requests
+        });
     }
 });
 
@@ -34,18 +37,19 @@ router.post("/login", (req, res, next) => {
     var getAccount = "SELECT * FROM users WHERE email = $1";
 
     pool.query(getAccount, [email], (err, qRes) => {
-
         if (err) {
             console.log(err.stack);
-            res.status(500).send();
+            res.redirect("/home");
         } else {
-
             //If no results go back.
             console.log(qRes.rows.length);
             if (qRes.rows.length < 1) {
-                console.log("Entered Here");
-                res.redirect("../");
-                return;
+                res.render("home", {
+                    Navbar: "Login_Navbar",
+                    LoginName: "",
+                    friendRequests: [],
+                    invalidLogin: true
+                });
             }
 
             let hash = qRes.rows[0].password;
@@ -54,17 +58,28 @@ router.post("/login", (req, res, next) => {
                     req.session.userID = qRes.rows[0].id;
                     req.session.first_name = qRes.rows[0].first;
                     req.session.last_name = qRes.rows[0].last;
-                    req.session.full_name = qRes.rows[0].first + " " + qRes.rows[0].last;
+                    req.session.full_name =
+                        qRes.rows[0].first + " " + qRes.rows[0].last;
 
-                    var getRequestsSql = "SELECT requests.id, users.first, users.last FROM requests INNER JOIN users\
+                    var getRequestsSql =
+                        "SELECT requests.id, users.first, users.last FROM requests INNER JOIN users\
                             ON requests.sender = users.id WHERE requests.receiver = $1";
-                    pool.query(getRequestsSql, [req.session.userID], (err, qRes) => {
-                        req.session.requests = qRes.rows;
-                        res.redirect("../"); //Go back to home.
-                    });
+                    pool.query(
+                        getRequestsSql,
+                        [req.session.userID],
+                        (err, qRes) => {
+                            req.session.requests = qRes.rows;
+                            res.redirect("/home"); //Go back to home.
+                        }
+                    );
                 } else {
                     console.log("Invalid password");
-                    res.redirect("../../"); //Go back to home.
+                    res.render("home", {
+                        Navbar: "Login_Navbar",
+                        LoginName: "",
+                        friendRequests: [],
+                        invalidLogin: true
+                    });
                 }
             });
         }
