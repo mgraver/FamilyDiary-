@@ -151,7 +151,9 @@ router.get("/:journalId/:journalName/createEntry", (req, res, next) => {
 		LoginName: req.session.full_name,
 		JournalName: jName,
 		JournalId: jId,
-		friendRequests: req.session.requests
+		friendRequests: req.session.requests,
+		entryData: {},
+		photoKeys: {}
 	});
 });
 
@@ -210,7 +212,8 @@ router.get(
 	"/:journalId/:journalName/:entryKey/:entryTitle/entry",
 	(req, res, next) => {
 		var promises = [];
-		var photos = [];
+		var photos = []; //Sighned URLs for the pictures
+		var photoKeys = []; //Save keys for the pictures
 
 		var listParams = {
 			Bucket: bucketName,
@@ -227,10 +230,11 @@ router.get(
 		s3.listObjectsV2(listParams, (err, data) => {
 			if (err) console.log(err, err.stack);
 			for (let i = 0; i < data.Contents.length; i++) {
+				photoKeys.push(data.Contents[i].Key);
 				let params = {
 					Bucket: bucketName,
 					Key: data.Contents[i].Key,
-					Expires: (60 * 20) 
+					Expires: (1200) //URL lasts for 20 mins.
 				};
 
 				promises.push(
@@ -264,7 +268,6 @@ router.get(
 			);
 
 			Promise.all(promises).then(results => {
-				var entry;
 				for (let i in results) {
 					if (typeof results[i] === "string") photos.push(results[i]);
 					else {
@@ -272,6 +275,10 @@ router.get(
 						entry = JSON.parse(entryJson);
 					}
 				}
+
+				//Save the entry info to the session so it can be edited faster.
+				req.session.editEntry = entry;
+				req.session.photoKeys = photoKeys;
 
 				res.render("entryDisplay", {
 					Navbar: "Logout_Navbar",
@@ -286,5 +293,19 @@ router.get(
 		});
 	}
 );
+
+router.get("/:journalId/:journalName/:entryKey/:entryTitle/edit", (req, res, next) => {
+	let jName = req.params.journalName;
+	let jId = req.params.journalId;
+	res.render("entryCreation", {
+		Navbar: "Logout_Navbar",
+		LoginName: req.session.full_name,
+		JournalName: jName,
+		JournalId: jId,
+		friendRequests: req.session.requests,
+		entryData: req.session.editEntry,
+		photoKeys: req.session.photoKeys
+	});
+});
 
 module.exports = router;

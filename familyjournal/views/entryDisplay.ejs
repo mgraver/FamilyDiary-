@@ -22,7 +22,10 @@
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     <div class="card">
-                        <div class="card-header cardHeader-color"><%= journalTitle%></div>
+                        <div class="card-header cardHeader-color">
+                            <%= journalTitle%>
+                            <a href="edit"><img src="/images/open-iconic-master/svg/pencil.svg" alt="edit-button" id="edt-btn"></a>
+                        </div>
                         <div class="card-body">
                             <div class="row justify-content-end">
                                 <div class="col-sm-4">
@@ -50,5 +53,4 @@
         <% } %>
     </main>
 </body>
-
 </html>

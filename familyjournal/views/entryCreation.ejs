@@ -32,22 +32,39 @@
                                 <div class="form-group row justify-content-end">
                                     <label for="date" class="col-md-4 col-form-label text-md-right">Date</label>
                                     <div class="col-sm-4">
-                                        <input type="date" id="date" class="form-control" name="date" required>
+                                        <input type="date" id="date" class="form-control" name="date" <% if (!(Object.keys(entryData).length===0 && entryData.constructor===Object)) { %> 
+                                        value="<%= entryData.date%>"
+                                        <% } %> required>
                                     </div>
                                 </div>
                                 <div class="form-group row justify-content-start">
                                     <label for="Title" class="col-xs-2 col-form-label text-md-right">Title</label>
                                     <div class="col-md-5">
-                                        <input type="text" id="Title" class="form-control" name="title" required>
+                                        <input type="text" id="Title" class="form-control" name="title" <% if (!(Object.keys(entryData).length===0 && entryData.constructor===Object)) { %> 
+                                        value="<%=entryData.title.trim()%>"
+                                        <% } %> required>
                                     </div>
                                 </div>
                                 <div class="form-group row justify-content-start">
-                                    <textarea cols="90" rows="20" form="entry-form" name="text" id="entry-body" class="form-control" placeholder="Dear journal..."></textarea>
+                                    <textarea cols="90" rows="20" form="entry-form" name="text" id="entry-body" class="form-control" placeholder="Dear journal...">
+                                        <% if (!(Object.keys(entryData).length === 0 && entryData.constructor === Object)) { %> <%= entryData.text%> <% } %>
+                                    </textarea>
                                 </div>
                                 <div class="row justify-content-start" id="inputDiv">
                                     <input type="file" name="photos" id="pictureInput" accept="image/*" multiple>
                                 </div>
                                 <div id="fileInfo"></div>
+                                <% if (!(Object.keys(photoKeys).length === 0 && photoKeys.constructor === Object)) { %>
+                                <h5>Pictures to be removed:</h5>
+                                <% for (var i in photoKeys) { %>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="defaultCheck1" name="deletedPics">
+                                    <label class="form-check-label" for="defaultCheck1">
+                                        <%= photoKeys[i].split("/").pop()%>
+                                    </label>
+                                </div>
+                                <% } %>
+                                <% } %>
                                 <div class="row justify-content-center">
                                     <div class="col-xs-1">
                                         <input type="submit" class="btn btn-theme">

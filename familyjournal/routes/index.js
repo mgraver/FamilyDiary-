@@ -26,7 +26,7 @@ router.get("/home", function(req, res, next) {
         res.render("home", {
             Navbar: "Logout_Navbar",
             LoginName: req.session.full_name,
-            friendRequests: req.session.requests
+            friendRequests: req.session.requests,
             invalidLogin: false
         });
     }
