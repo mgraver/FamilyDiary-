@@ -266,6 +266,7 @@ router.get(
             );
 
             Promise.all(promises).then(results => {
+            	var entry = {};
                 for (let i in results) {
                     if (typeof results[i] === "string") photos.push(results[i]);
                     else {
@@ -357,7 +358,7 @@ router.post(
         for (i in checkBoxes) {
             keyObjects.push({ Key: req.session.photoKeys[checkBoxes[i]] });
         }
-        
+
         params = {
             Bucket: bucketName,
             Delete: { Objects: keyObjects, Quiet: false }
