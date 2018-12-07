@@ -169,7 +169,7 @@ router.post(
         entry.date = req.body.date;
         entry.title = req.body.title;
         entry.text = req.body.text.trim();
-        console.log(entry.text.substring(0, 50));
+        
         pool.query(
             addEntrySQL,
             [req.session.userID, req.params.journalId, entry.title],
@@ -325,8 +325,7 @@ router.post(
         entry.date = req.body.date;
         entry.title = req.body.title;
         entry.text = req.body.text.trim();
-        console.log(entry.text)
-        console.log("I am here: "+ entry.text.substring(0, 50));
+
         var entryJson = JSON.stringify(entry);
         var entryBuffer = Buffer.from(entryJson);
 
