@@ -3,9 +3,11 @@ var router = express.Router();
 
 const pool = require("./db");
 const aws = require("../AWSconfig");
+const nodemailer = require("nodemailer");
 
 const s3 = new aws.S3();
 const bucketName = "byui-seniorproject";
+const transporter = require("../emailConfig");
 
 //Reroute the user back to home if they arent logged in.
 router.use((req, res, next) => {
@@ -54,11 +56,11 @@ router.get("/acceptRequest/:requestId", (req, res, next) => {
 		if (rId == req.session.requests[i].id)
 			req.session.requests.splice(i, 1);
 
-	//Before acceptance make sure that user who sent request
-	//was the receiver.
+	//Before acceptance make sure that user who accepts request is the correct user.
 	pool.connect((err, client, done) => {
 		client.query(
-			"SELECT receiver, sender FROM requests WHERE id = $1",
+			"SELECT users.email, requests.sender, requests.receiver FROM requests\
+			 INNER JOIN users ON requests.sender = users.id WHERE requests.id = 1",
 			[rId],
 			(err, qRes) => {
 				if (req.session.userID != qRes.rows[0].receiver) {
@@ -68,6 +70,19 @@ router.get("/acceptRequest/:requestId", (req, res, next) => {
 				let addFriend =
 					"INSERT INTO friends (friend1, friend2) VALUES ($1, $2)";
 				var promises = [];
+
+				var mailOptions = {
+					from: "familyjournalnotifications@gmail.com",
+					to: qRes.rows[0].email,
+					subject: "Friend Request Accepted",
+					text:
+						req.session.full_name +
+						"has accepted your friend request on Family Journal!"
+				};
+
+				transporter.sendMail(mailOptions, (err, info) => {
+					if (err) console.log(err);
+				});
 
 				promises.push(
 					new Promise((success, reject) => {
@@ -156,6 +171,21 @@ router.post("/requestFriend", (req, res, next) => {
 					[req.session.userID, qRes.rows[0].id],
 					(err, qRes) => {
 						done();
+						if (err) console.log(err);
+						else {
+							var mailOptions = {
+								from: "familyjournalnotifications@gmail.com",
+								to: "myfriend@yahoo.com",
+								subject: "Friend Request",
+								text:
+									req.session.full_name +
+									"has sent you a friend request on Family Journal!"
+							};
+
+							transporter.sendMail(mailOptions, (err, info) => {
+								if (err) console.log(err);
+							});
+						}
 					}
 				);
 			}
@@ -262,8 +292,10 @@ router.get(
 	}
 );
 
-router.get("/:friendId/journals/:journalId/:journalName/:entryKey/:entryTitle/entry", (req,res, next) => {
-	var promises = [];
+router.get(
+	"/:friendId/journals/:journalId/:journalName/:entryKey/:entryTitle/entry",
+	(req, res, next) => {
+		var promises = [];
 		var photos = [];
 
 		var listParams = {
@@ -284,7 +316,7 @@ router.get("/:friendId/journals/:journalId/:journalName/:entryKey/:entryTitle/en
 				let params = {
 					Bucket: bucketName,
 					Key: data.Contents[i].Key,
-					Expires: (60 * 20) 
+					Expires: 60 * 20
 				};
 
 				promises.push(
@@ -339,6 +371,7 @@ router.get("/:friendId/journals/:journalId/:journalName/:entryKey/:entryTitle/en
 				});
 			});
 		});
-});
+	}
+);
 
 module.exports = router;
