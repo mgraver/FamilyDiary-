@@ -286,7 +286,8 @@ router.get(
                     journalDate: entry.date,
                     journalText: entry.text,
                     entryPhotos: photos,
-                    friendRequests: req.session.requests
+                    friendRequests: req.session.requests,
+                    edit: true
                 });
             });
         });

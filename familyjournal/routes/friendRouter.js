@@ -334,7 +334,8 @@ router.get("/:friendId/journals/:journalId/:journalName/:entryKey/:entryTitle/en
 					journalDate: entry.date,
 					journalText: entry.text,
 					entryPhotos: photos,
-					friendRequests: req.session.requests
+					friendRequests: req.session.requests,
+					edit: false
 				});
 			});
 		});
