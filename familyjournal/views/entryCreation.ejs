@@ -47,9 +47,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group row justify-content-start">
-                                    <textarea cols="90" rows="20" form="entry-form" name="text" id="entry-body" class="form-control" placeholder="Dear journal...">
-                                        <% if (!(Object.keys(entryData).length === 0 && entryData.constructor === Object)) { %> <%= entryData.text%> <% } %>
-                                    </textarea>
+                                    <textarea cols="90" rows="20" form="entry-form" name="text" id="entry-body" class="form-control" placeholder="Dear journal..."><% if (!(Object.keys(entryData).length === 0 && entryData.constructor === Object)) { %> <%= entryData.text%> <% } %></textarea>
                                 </div>
                                 <div class="row justify-content-start" id="inputDiv">
                                     <input type="file" name="photos" id="pictureInput" accept="image/*" multiple>

@@ -33,7 +33,6 @@ router.post("/createAccount", (req, res, next) => {
         let insertData = [first_name, last_name, email, hash];
 
         pool.query(insertSQL, insertData, (err, qRes) => {
-            console.log("Pool query.");
             if (err) {
                 console.log(err.stack);
                 if (err.code == 23505)
@@ -48,7 +47,6 @@ router.post("/createAccount", (req, res, next) => {
                         invalidLogin: false
                     });
             } else {
-                console.log(qRes.rows[0]);
                 req.session.userID = qRes.rows[0].id;
                 req.session.first_name = qRes.rows[0].first;
                 req.session.last_name = qRes.rows[0].last;
