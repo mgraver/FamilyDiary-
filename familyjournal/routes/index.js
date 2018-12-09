@@ -61,18 +61,36 @@ router.post("/login", (req, res, next) => {
                     req.session.last_name = qRes.rows[0].last;
                     req.session.full_name =
                         qRes.rows[0].first + " " + qRes.rows[0].last;
+                    req.session.email = email;
 
                     var getRequestsSql =
                         "SELECT requests.id, users.first, users.last FROM requests INNER JOIN users\
                             ON requests.sender = users.id WHERE requests.receiver = $1";
-                    pool.query(
-                        getRequestsSql,
-                        [req.session.userID],
-                        (err, qRes) => {
+
+                    pool.query( getRequestsSql, [req.session.userID], (err, qRes) => {
                             req.session.requests = qRes.rows;
                             res.redirect("/home"); //Go back to home.
+                    });
+
+                    var getFriendEmails = 
+                        "SELECT users.email FROM users JOIN friends ON\
+                        (users.id = friends.friend1 OR users.id = friends.friend2) WHERE friend1 = $1 OR friend2 = $1";
+
+                    pool.query(getFriendEmails, [req.session.userID], (err, qRes) => {
+                        if (qRes.rows.length == 0)
+                            return;
+
+                        var friendEmails = []
+                        for (i in qRes.rows)
+                        {
+                            if (qRes.rows[i].email != req.session.email)
+                                friendEmails.push(qRes.rows[i].email);
                         }
-                    );
+                        req.session.friendEmails = friendEmails;
+                        
+                        //After res.redirect or res.send has been used res.session.save must be used.
+                        req.session.save();
+                    });
                 } else {
                     console.log("Invalid password");
                     res.render("home", {

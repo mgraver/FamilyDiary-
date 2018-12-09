@@ -60,7 +60,7 @@ router.get("/acceptRequest/:requestId", (req, res, next) => {
 	pool.connect((err, client, done) => {
 		client.query(
 			"SELECT users.email, requests.sender, requests.receiver FROM requests\
-			 INNER JOIN users ON requests.sender = users.id WHERE requests.id = 1",
+			 INNER JOIN users ON requests.sender = users.id WHERE requests.id = $1",
 			[rId],
 			(err, qRes) => {
 				if (req.session.userID != qRes.rows[0].receiver) {
@@ -77,11 +77,12 @@ router.get("/acceptRequest/:requestId", (req, res, next) => {
 					subject: "Friend Request Accepted",
 					text:
 						req.session.full_name +
-						"has accepted your friend request on Family Journal!"
+						" has accepted your friend request on Family Journal!"
 				};
 
 				transporter.sendMail(mailOptions, (err, info) => {
 					if (err) console.log(err);
+					else console.log(info);
 				});
 
 				promises.push(
@@ -175,15 +176,16 @@ router.post("/requestFriend", (req, res, next) => {
 						else {
 							var mailOptions = {
 								from: "familyjournalnotifications@gmail.com",
-								to: "myfriend@yahoo.com",
+								to: email,
 								subject: "Friend Request",
 								text:
 									req.session.full_name +
-									"has sent you a friend request on Family Journal!"
+									" has sent you a friend request on Family Journal!"
 							};
 
 							transporter.sendMail(mailOptions, (err, info) => {
 								if (err) console.log(err);
+								else console.log(info);
 							});
 						}
 					}
@@ -241,8 +243,7 @@ router.get("/:friendId/journals", (req, res, next) => {
 });
 
 router.get(
-	"/:friendId/journals/:journalId/:journalName/entries",
-	(req, res, next) => {
+	"/:friendId/journals/:journalId/:journalName/entries", (req, res, next) => {
 		let jName = req.params.journalName;
 		let jId = req.params.journalId;
 		var entries = [];

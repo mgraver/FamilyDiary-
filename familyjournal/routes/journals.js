@@ -5,6 +5,9 @@ const pool = require("./db");
 const aws = require("../AWSconfig");
 const bucketName = "byui-seniorproject";
 
+const nodemailer = require("nodemailer");
+const transporter = require("../emailConfig");
+
 const multer = require("multer");
 const multerS3 = require("multer-s3");
 const s3 = new aws.S3();
@@ -105,6 +108,26 @@ router.post("/createJournal", (req, res, next) => {
 			res.redirect("/journals");
 		}
 	);
+
+	//Let friends know they have a new shared journal from user.
+	if (shared) {
+		var mailOptions = {
+			from: "familyjournalnotifications@gmail.com",
+			to: "",
+			subject: "New journal has been shared with you.",
+			text:
+				req.session.full_name +
+				" has shared a new journal on Family Journal with you! Go check it out!"
+		};
+
+		for (i in req.session.friendEmails) {
+			mailOptions.to = req.session.friendEmails[i];
+			transporter.sendMail(mailOptions, (err, info) => {
+				if (err) console.log(err);
+				else console.log(info);
+			});
+		}
+	}
 });
 
 router.get("/:journalId/:journalName/entries", (req, res, next) => {

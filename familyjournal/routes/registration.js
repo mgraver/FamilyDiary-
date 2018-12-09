@@ -9,12 +9,13 @@ const saltRounds = 10;
 router.get("/", (req, res, next) => {
     res.render("register.ejs", {
         form: {
-            first: '',
-            last: '',
-            email: '',
-            pass: ''
+            first: "",
+            last: "",
+            email: "",
+            pass: ""
         },
-        errors: { email: false }
+        errors: { email: false },
+        invalidLogin: false
     });
 });
 
@@ -43,7 +44,8 @@ router.post("/createAccount", (req, res, next) => {
                             email: email,
                             pass: password
                         },
-                        errors: { email: true }
+                        errors: { email: true },
+                        invalidLogin: false
                     });
             } else {
                 console.log(qRes.rows[0]);
