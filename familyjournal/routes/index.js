@@ -43,7 +43,6 @@ router.post("/login", (req, res, next) => {
             res.redirect("/home");
         } else {
             //If no results go back.
-            console.log(qRes.rows.length);
             if (qRes.rows.length < 1) {
                 res.render("home", {
                     Navbar: "Login_Navbar",
@@ -51,6 +50,7 @@ router.post("/login", (req, res, next) => {
                     friendRequests: [],
                     invalidLogin: true
                 });
+                return;
             }
 
             let hash = qRes.rows[0].password;
@@ -92,7 +92,6 @@ router.post("/login", (req, res, next) => {
                         req.session.save();
                     });
                 } else {
-                    console.log("Invalid password");
                     res.render("home", {
                         Navbar: "Login_Navbar",
                         LoginName: "",
