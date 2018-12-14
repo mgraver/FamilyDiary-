@@ -15,4 +15,5 @@ p {
 	padding: 1rem;
 	margin: 1rem;
 	line-height: 160%;
+	max-width: 80%;
 }
